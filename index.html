@@ -1,0 +1,229 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#1a1a2e;color:#fff;height:100vh;display:flex;flex-direction:column;overflow:hidden}
+.topbar{background:#16213e;padding:10px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #0f3460;flex-shrink:0}
+.topbar h1{font-size:12px;color:#a0b4cc;font-weight:400}
+.nav{display:flex;gap:8px;align-items:center}
+.nav button{background:#0f3460;border:none;color:#fff;padding:8px 18px;border-radius:4px;cursor:pointer;font-size:13px;font-weight:700;transition:background .2s}
+.nav button:hover{background:#e94560}
+.nav button:disabled{background:#222;color:#555;cursor:not-allowed}
+.counter{font-size:13px;color:#e94560;font-weight:700;min-width:60px;text-align:center}
+.progress{height:4px;background:#0f3460;flex-shrink:0}
+.progress-fill{height:4px;background:#e94560;transition:width .35s}
+.stage{flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.slide{display:none;width:100%;height:100%;padding:48px 72px;flex-direction:column;justify-content:center;background:linear-gradient(140deg,#16213e 0%,#1a1a2e 100%)}
+.slide.active{display:flex}
+/* Portada */
+.cover{align-items:center;text-align:center}
+.icon-circle{width:72px;height:72px;background:#e94560;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 22px}
+.tag-label{font-size:11px;text-transform:uppercase;letter-spacing:2.5px;color:#e94560;font-weight:700;margin-bottom:10px}
+.slide-title{font-size:30px;font-weight:700;line-height:1.25;margin-bottom:12px}
+.lead{font-size:15px;color:#a0b4cc;max-width:520px;line-height:1.6}
+.chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:18px}
+.chip{background:rgba(15,52,96,.7);border:1px solid #0f3460;color:#a0b4cc;font-size:12px;padding:5px 14px;border-radius:3px}
+/* Integrante badge */
+.who{display:inline-block;background:#e94560;color:#fff;font-size:11px;padding:4px 14px;border-radius:2px;font-weight:700;letter-spacing:.5px;margin-bottom:14px;align-self:flex-start}
+/* Tarjetas */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:14px}
+.three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px}
+.card{background:rgba(15,52,96,.5);border:1px solid #0f3460;border-radius:6px;padding:16px}
+.card h4{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#e94560;margin-bottom:8px}
+.card p{font-size:13px;color:#ccc;line-height:1.6}
+.card.hl{border-color:#e94560;background:rgba(233,69,96,.08)}
+/* Servidor card */
+.srv{background:rgba(15,52,96,.5);border:1px solid #0f3460;border-radius:6px;padding:14px;text-align:center}
+.srv.best{border-color:#e94560;background:rgba(233,69,96,.1)}
+.srv .sn{font-size:10px;color:#a0b4cc;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.srv .sv{font-size:20px;font-weight:700}
+.srv.best .sv{color:#e94560}
+.srv .sp{font-size:12px;color:#a0b4cc}
+.bar-bg{height:7px;background:#0f3460;border-radius:4px;margin:8px 0}
+.bar-fill{height:7px;border-radius:4px;background:#e94560}
+/* Ecuaciones */
+.eq{background:rgba(233,69,96,.08);border-left:4px solid #e94560;padding:10px 18px;border-radius:0 6px 6px 0;margin:10px 0;font-family:'Courier New',monospace}
+.eq .en{font-family:Arial,sans-serif;font-size:10px;color:#e94560;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.eq .et{font-size:16px;font-weight:700;color:#fff}
+.eq.gold{border-color:#f0c040}
+.eq.gold .en{color:#f0c040}
+.eq.green{border-color:#4caf50}
+.eq.green .en{color:#4caf50}
+/* Lambda grande */
+.big-lam{font-size:60px;font-weight:700;color:#e94560;text-align:center;font-family:'Courier New',monospace;margin:10px 0}
+/* Pasos */
+.steps{margin-top:10px}
+.step{display:flex;gap:12px;margin-bottom:11px;align-items:flex-start;font-size:13px;color:#ccc;line-height:1.5}
+.sn{min-width:26px;height:26px;background:#e94560;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;flex-shrink:0;color:#fff}
+/* Resultados */
+.result-banner{background:#e94560;color:#fff;text-align:center;padding:14px 20px;border-radius:6px;margin-top:14px}
+.rb-val{font-size:28px;font-weight:700}
+.rb-label{font-size:11px;opacity:.8;text-transform:uppercase;letter-spacing:1px}
+.two-res{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+.rc{background:rgba(15,52,96,.5);border:1px solid #0f3460;border-radius:6px;padding:14px;text-align:center}
+.rc.win{border-color:#e94560;background:rgba(233,69,96,.1)}
+.rc .rl{font-size:10px;color:#a0b4cc;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.rc .rv{font-size:24px;font-weight:700}
+.rc.win .rv{color:#e94560}
+.tag-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+</style>
+<div class="topbar">
+  <h1>📊 PRESENTACIÓN · Multiplicadores de Lagrange · Ing. Sistemas 2026</h1>
+  <div class="nav">
+    <button onclick="prev()" id="btnP" disabled>◀ Anterior</button>
+    <span class="counter" id="cnt">1/12</span>
+    <button onclick="next()" id="btnN">Siguiente ▶</button>
+  </div>
+</div>
+<div class="progress"><div class="progress-fill" id="prog" style="width:8.33%"></div></div>
+<div class="stage">
+
+<!-- 1 PORTADA -->
+<div class="slide active cover">
+  <div class="icon-circle">∑</div>
+  <div class="tag-label">Proyecto · Cálculo Multivariable</div>
+  <div class="slide-title">Optimización del Balanceo de Carga<br>en Servidores Distribuidos</div>
+  <div class="lead">Aplicación del Método de los Multiplicadores de Lagrange · Ingeniería de Sistemas · 2026</div>
+  <div class="chips">
+    <span class="chip">Diego Alejandro Aguilar</span>
+  </div>
+</div>
+
+<!-- 2 CONTEXTO -->
+<div class="slide">
+  <div class="who">🎙 Diego Aguilar</div>
+  <div class="tag-label">Sección 1 · Contexto del Problema</div>
+  <div class="slide-title">¿Cuál es el problema?</div>
+  <div class="lead">Un data center con 3 servidores debe atender 120 tareas/s al menor costo posible.</div>
+  <div class="two-col">
+    <div class="card"><h4>La situación</h4><p>Una empresa tiene <strong style="color:#fff">3 servidores</strong> con diferente eficiencia. Cada segundo llegan <strong style="color:#fff">120 tareas</strong> de los usuarios.</p></div>
+    <div class="card"><h4>El objetivo</h4><p>Decidir <strong style="color:#fff">cuántas tareas asignar a cada servidor</strong> para que el costo total sea <strong style="color:#fff">mínimo</strong> y toda la demanda quede cubierta.</p></div>
+  </div>
+  <div class="tag-row"><span class="chip">AWS / Google Cloud</span><span class="chip">Balanceadores NGINX</span><span class="chip">Kubernetes</span><span class="chip">Redes CDN</span></div>
+</div>
+
+<!-- 3 VARIABLES Y COSTO -->
+<div class="slide">
+  <div class="who">🎙  Diego Aguilar </div>
+  <div class="tag-label">Sección 2 · Formulación Matemática</div>
+  <div class="slide-title">Variables y Modelo de Costo</div>
+  <div class="eq"><div class="en">Variables de decisión</div><div class="et">x₁, x₂, x₃ = tareas/s asignadas a S₁, S₂, S₃</div></div>
+  <div class="three-col">
+    <div class="srv"><div class="sn">Servidor S₁</div><div class="sv">k = 2</div><div class="sp">C₁ = 2x₁²</div><div class="sp" style="margin-top:6px">Eficiencia media</div></div>
+    <div class="srv"><div class="sn">Servidor S₂</div><div class="sv">k = 3</div><div class="sp">C₂ = 3x₂²</div><div class="sp" style="margin-top:6px">Menor eficiencia</div></div>
+    <div class="srv best"><div class="sn">Servidor S₃ ★</div><div class="sv">k = 1</div><div class="sp">C₃ = x₃²</div><div class="sp" style="margin-top:6px;color:#e94560">Mayor eficiencia</div></div>
+  </div>
+</div>
+
+<!-- 4 FUNCIÓN OBJETIVO -->
+<div class="slide">
+  <div class="who">🎙  Diego Aguilar </div>
+  <div class="tag-label">Sección 2 · Formulación Matemática</div>
+  <div class="slide-title">Función Objetivo y Restricción</div>
+  <div class="lead" style="margin-bottom:8px">Minimizar el costo total garantizando que toda la demanda sea atendida.</div>
+  <div class="eq"><div class="en">Función objetivo — Minimizar</div><div class="et">min f(x₁, x₂, x₃) = 2x₁² + 3x₂² + x₃²</div></div>
+  <div class="eq gold"><div class="en">Restricción de igualdad</div><div class="et">g(x₁, x₂, x₃) = x₁ + x₂ + x₃ − 120 = 0</div></div>
+  <div class="card hl" style="margin-top:12px"><h4>Tipo de problema</h4><p>Función objetivo <strong style="color:#fff">cuadrática</strong> + restricción <strong style="color:#fff">lineal de igualdad</strong> → escenario ideal para <strong style="color:#e94560">Multiplicadores de Lagrange.</strong></p></div>
+</div>
+
+<!-- 5 TEORÍA -->
+<div class="slide">
+  <div class="who">🎙  Diego Aguilar </div>
+  <div class="tag-label">Sección 3 · Método de Lagrange</div>
+  <div class="slide-title">Fundamento del Método</div>
+  <div class="lead" style="margin-bottom:8px">En el punto óptimo, los gradientes de f y g son paralelos.</div>
+  <div class="eq"><div class="en">Condición necesaria de optimalidad</div><div class="et">∇f = λ · ∇g</div></div>
+  <div class="eq"><div class="en">Función Lagrangiana ℒ</div><div class="et">ℒ(x₁,x₂,x₃,λ) = 2x₁² + 3x₂² + x₃² − λ(x₁+x₂+x₃−120)</div></div>
+  <div class="card hl" style="margin-top:12px"><h4>¿Qué es λ (lambda)?</h4><p>Escalar que mide cuánto cambia el valor óptimo cuando la restricción cambia en una unidad. Tiene <strong style="color:#e94560">interpretación económica directa.</strong></p></div>
+</div>
+
+<!-- 6 DERIVADAS -->
+<div class="slide">
+  <div class="who">🎙  Diego Aguilar </div>
+  <div class="tag-label">Sección 3 · Método de Lagrange</div>
+  <div class="slide-title">Sistema de Ecuaciones — Derivadas Parciales</div>
+  <div class="eq"><div class="en">∂ℒ/∂x₁ = 0</div><div class="et">4x₁ − λ = 0 → x₁ = λ/4</div></div>
+  <div class="eq"><div class="en">∂ℒ/∂x₂ = 0</div><div class="et">6x₂ − λ = 0 → x₂ = λ/6</div></div>
+  <div class="eq"><div class="en">∂ℒ/∂x₃ = 0</div><div class="et">2x₃ − λ = 0 → x₃ = λ/2</div></div>
+  <div class="eq gold"><div class="en">∂ℒ/∂λ = 0 — Recupera la restricción</div><div class="et">x₁ + x₂ + x₃ = 120</div></div>
+</div>
+
+<!-- 7 RESOLUCIÓN λ -->
+<div class="slide">
+  <div class="who">🎙  Diego Aguilar </div>
+  <div class="tag-label">Sección 3 · Método de Lagrange</div>
+  <div class="slide-title">Resolución — Encontrar el valor de λ</div>
+  <div class="eq"><div class="en">Sustitución en la restricción</div><div class="et">λ/4 + λ/6 + λ/2 = 120</div></div>
+  <div class="eq"><div class="en">MCM = 12</div><div class="et">3λ/12 + 2λ/12 + 6λ/12 = 120 → 11λ/12 = 120</div></div>
+  <div class="big-lam">λ = 1440/11 ≈ 130.91</div>
+</div>
+
+<!-- 8 VALORES ÓPTIMOS -->
+<div class="slide">
+  <div class="who">🎙  Diego Aguilar </div>
+  <div class="tag-label">Sección 3 · Método de Lagrange</div>
+  <div class="slide-title">Valores Óptimos de Asignación</div>
+  <div class="eq"><div class="en">Servidor S₁</div><div class="et">x₁* = λ/4 = 360/11 ≈ 32.73 tareas/s</div></div>
+  <div class="eq"><div class="en">Servidor S₂</div><div class="et">x₂* = λ/6 = 240/11 ≈ 21.82 tareas/s</div></div>
+  <div class="eq"><div class="en">Servidor S₃</div><div class="et">x₃* = λ/2 = 720/11 ≈ 65.45 tareas/s</div></div>
+  <div class="eq green"><div class="en">Verificación ✓</div><div class="et">360/11 + 240/11 + 720/11 = 1320/11 = 120 ✓</div></div>
+</div>
+
+<!-- 9 DISTRIBUCIÓN -->
+<div class="slide">
+  <div class="who">🎙  Diego Aguilar </div>
+  <div class="tag-label">Sección 4 · Análisis de Resultados</div>
+  <div class="slide-title">Distribución Óptima de Carga</div>
+  <div class="three-col">
+    <div class="srv"><div class="sn">S₁ (k=2)</div><div class="sv">32.73 t/s</div><div class="sp">27.27%</div><div class="bar-bg"><div class="bar-fill" style="width:27%"></div></div><div class="sp">Eficiencia media</div></div>
+    <div class="srv"><div class="sn">S₂ (k=3)</div><div class="sv">21.82 t/s</div><div class="sp">18.18%</div><div class="bar-bg"><div class="bar-fill" style="width:18%"></div></div><div class="sp">Menor eficiencia</div></div>
+    <div class="srv best"><div class="sn">S₃ (k=1) ★</div><div class="sv">65.45 t/s</div><div class="sp">54.55%</div><div class="bar-bg"><div class="bar-fill" style="width:55%"></div></div><div class="sp" style="color:#e94560">Mayor eficiencia</div></div>
+  </div>
+  <div class="result-banner"><div class="rb-label">Costo mínimo total</div><div class="rb-val">f* = 950400/121 ≈ 7855.37 unidades</div></div>
+</div>
+
+<!-- 10 COMPARACIÓN -->
+<div class="slide">
+  <div class="who">🎙  Diego Aguilar </div>
+  <div class="tag-label">Sección 4 · Análisis de Resultados</div>
+  <div class="slide-title">¿Cuánto ahorra el método?</div>
+  <div class="lead" style="margin-bottom:8px">Vs. distribución uniforme (40 tareas a cada servidor)</div>
+  <div class="two-res">
+    <div class="rc"><div class="rl">Distribución uniforme (x=40)</div><div class="rv">9600</div><div style="font-size:12px;color:#a0b4cc;margin-top:4px">unidades de costo</div></div>
+    <div class="rc win"><div class="rl">Solución con Lagrange ★</div><div class="rv">7855.37</div><div style="font-size:13px;color:#e94560;font-weight:700;margin-top:6px">AHORRO: 18.17%</div></div>
+  </div>
+  <div class="card hl" style="margin-top:14px"><h4>Interpretación de λ ≈ 130.91</h4><p>Si la demanda sube de 120 a <strong style="color:#fff">121 tareas/s</strong>, el costo mínimo sube en <strong style="color:#fff">~130.91 unidades</strong>. Fundamental para decisiones de escalabilidad.</p></div>
+</div>
+
+<!-- 11 CONCLUSIONES -->
+<div class="slide">
+  <div class="who">🎙  Diego Aguilar </div>
+  <div class="tag-label">Sección 5 · Conclusiones</div>
+  <div class="slide-title">Conclusiones</div>
+  <div class="steps">
+    <div class="step"><div class="sn">1</div><div>El método de los multiplicadores de Lagrange es una herramienta poderosa y precisa para optimización con restricciones en Ingeniería de Sistemas.</div></div>
+    <div class="step"><div class="sn">2</div><div>La solución óptima no es intuitiva: el 54.55% va al servidor más eficiente, logrando un <strong style="color:#e94560">ahorro del 18.17%</strong> frente a la distribución uniforme.</div></div>
+    <div class="step"><div class="sn">3</div><div>El multiplicador λ ≈ 130.91 es el costo marginal por tarea adicional de demanda: útil para decisiones de escalabilidad.</div></div>
+    <div class="step"><div class="sn">4</div><div>Este método es la base de sistemas reales: NGINX, Kubernetes, AWS Auto Scaling y algoritmos de scheduling.</div></div>
+    <div class="step"><div class="sn">5</div><div>El cálculo multivariable tiene aplicación directa en el ejercicio profesional del Ingeniero de Sistemas.</div></div>
+  </div>
+</div>
+
+<!-- 12 CIERRE -->
+<div class="slide cover">
+  <div class="icon-circle" style="font-size:24px">✓</div>
+  <div class="tag-label">Fin de la Presentación</div>
+  <div class="slide-title">¡Muchas Gracias!</div>
+  <div style="font-family:'Courier New',monospace;font-size:14px;color:#a0b4cc;background:rgba(15,52,96,.4);padding:14px 28px;border-radius:6px;margin:16px 0;text-align:center">
+    min f = 2x₁²+3x₂²+x₃² &nbsp;|&nbsp; x₁+x₂+x₃ = 120<br>
+    <span style="color:#e94560">λ* ≈ 130.91 &nbsp;·&nbsp; f* ≈ 7855.37 &nbsp;·&nbsp; Ahorro: 18.17%</span>
+  </div>
+  <div class="chips"><span class="chip">Ingeniería de Sistemas</span><span class="chip">Cálculo Multivariable</span><span class="chip">2026</span></div>
+</div>
+
+</div>
+<script>
+let c=0;const sl=document.querySelectorAll('.slide'),t=sl.length;
+function show(n){sl[c].classList.remove('active');c=n;sl[c].classList.add('active');document.getElementById('cnt').textContent=(c+1)+'/'+t;document.getElementById('btnP').disabled=c===0;document.getElementById('btnN').disabled=c===t-1;document.getElementById('prog').style.width=((c+1)/t*100)+'%'}
+function next(){if(c<t-1)show(c+1)}function prev(){if(c>0)show(c-1)}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')next();if(e.key==='ArrowLeft')prev()})
+</script>
